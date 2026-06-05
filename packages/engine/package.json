@@ -9,6 +9,11 @@
     "lint": "eslint ."
   },
   "devDependencies": {
-    "typescript": "latest"
+    "@types/node": "^20.19.41",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "gray-matter": "^4.0.3",
+    "zod": "^4.4.3"
   }
 }
