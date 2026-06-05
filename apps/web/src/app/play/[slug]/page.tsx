@@ -3,19 +3,16 @@
 import React, { useState, useEffect } from "react";
 import { Adventure, parseAdventure } from "@rpg/engine";
 import { GameScreen } from "@/components/game/GameScreen";
+import { useSaveState } from "@/lib/useSaveState";
 
-// Este componente simula o carregamento da aventura. 
-// Na Fase 4, buscaremos os arquivos reais do sistema de arquivos/API.
 export default function PlayPage({ params }: { params: { slug: string } }) {
   const [adventure, setAdventure] = useState<Adventure | null>(null);
-  const [currentPageSlug, setCurrentPageSlug] = useState("start");
   const [error, setError] = useState<string | null>(null);
+  const { currentPageSlug, saveProgress, resetProgress, isLoaded } = useSaveState(params.slug);
 
   useEffect(() => {
     async function loadAdventure() {
       try {
-        // Mocking adventure data for Phase 3 integration testing
-        // In a real scenario, we would fetch the .md file content here
         const response = await fetch('/api/adventure?slug=' + params.slug);
         const data = await response.json();
         
@@ -34,7 +31,7 @@ export default function PlayPage({ params }: { params: { slug: string } }) {
   }, [params.slug]);
 
   if (error) return <div className="p-10 text-red-500">{error}</div>;
-  if (!adventure) return <div className="p-10 text-stone-400">Carregando aventura...</div>;
+  if (!adventure || !isLoaded) return <div className="p-10 text-stone-400">Carregando aventura...</div>;
 
   const currentPage = adventure.pages[currentPageSlug];
 
@@ -42,7 +39,7 @@ export default function PlayPage({ params }: { params: { slug: string } }) {
     return (
       <div className="p-10">
         <p className="text-red-500">Erro: Página "{currentPageSlug}" não encontrada na aventura.</p>
-        <button onClick={() => setCurrentPageSlug("start")} className="underline mt-4">
+        <button onClick={resetProgress} className="underline mt-4">
           Voltar ao início
         </button>
       </div>
@@ -54,7 +51,9 @@ export default function PlayPage({ params }: { params: { slug: string } }) {
       title={adventure.metadata.title}
       content={currentPage.content}
       choices={currentPage.choices}
-      onChoice={(dest) => setCurrentPageSlug(dest)}
+      onChoice={saveProgress}
+      onReset={resetProgress}
+      currentPageSlug={currentPageSlug}
     />
   );
 }
