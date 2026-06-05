@@ -11,6 +11,8 @@ describe("GameScreen", () => {
       { label: "Gritar por ajuda", destination: "gritar" },
     ],
     onChoice: vi.fn(),
+    onReset: vi.fn(),
+    currentPageSlug: "start",
   };
 
   it("deve renderizar o título e o conteúdo", () => {
