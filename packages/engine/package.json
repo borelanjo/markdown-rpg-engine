@@ -6,11 +6,15 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsc -w",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "devDependencies": {
     "@types/node": "^20.19.41",
-    "typescript": "^5.9.3"
+    "@vitest/coverage-v8": "^4.1.8",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.8"
   },
   "dependencies": {
     "gray-matter": "^4.0.3",
